@@ -14,6 +14,6 @@ RUN apk update \
 run mkdir -p /etc/default/
 RUN echo -e "ENABLED=1\nIGNORE_RESOLVCONF=yes" > /etc/default/dnsmasq
 COPY dnsmasq.conf /etc/dnsmasq.conf
-EXEC route add -net 192.168.4.0/24 gw 192.168.2.254
+CMD route add -net 192.168.4.0/24 gw 192.168.2.254
 #run!
 ENTRYPOINT ["webproc","--config","/etc/dnsmasq.conf","--","dnsmasq","--no-daemon"]

@@ -2,7 +2,8 @@
 
 dnsmasq in a docker container, configurable via a [simple web UI](https://github.com/jpillora/webproc)
 
-[![Build Status](https://travis-ci.org/leto1210/docker-dnsmasq.svg?branch=master)
+
+[![Build Status](https://travis-ci.org/leto1210/docker-dnsmasq.svg?branch=master)](https://travis-ci.org/leto1210/docker-dnsmasq)
 
 [![Docker Pulls](https://img.shields.io/docker/pulls/jpillora/dnsmasq.svg)][dockerhub]
 [![Image Size](https://images.microbadger.com/badges/image/jpillora/dnsmasq.svg)][dockerhub]

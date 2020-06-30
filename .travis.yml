@@ -26,7 +26,7 @@ notifications:
   webhooks:
     urls:
       - https://hooks.microbadger.com/images/leto1210/docker-dnsmasq/yHnTY1fBVjlf1UKlN6swxAEIrts=
-    on_success: change # default: always
+    on_success: always # default: always
     #on_failure: always # default: always
     #on_start:   change # default: never
     #on_cancel:  always # default: always

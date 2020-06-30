@@ -21,3 +21,13 @@ after_success:
   - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else (echo $TRAVIS_BRANCH) ; fi`
   - docker build -t $DOCKER_USERNAME/docker-dnsmasq:$TAG .
   - docker push $DOCKER_USERNAME/docker-dnsmasq:$TAG
+
+notifications:
+  webhooks:
+    urls:
+      - https://hooks.microbadger.com/images/leto1210/docker-dnsmasq/yHnTY1fBVjlf1UKlN6swxAEIrts=
+    on_success: change # default: always
+    #on_failure: always # default: always
+    #on_start:   change # default: never
+    #on_cancel:  always # default: always
+    #on_error:   always # default: always

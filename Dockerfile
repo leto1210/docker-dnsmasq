@@ -1,5 +1,8 @@
 FROM alpine:3.12.0
 LABEL maintainer="leto1210"
+ARG VCS_REF
+LABEL org.label-schema.vcs-ref=$VCS_REF \
+      org.label-schema.vcs-url="e.g. https://github.com/leto1210/docker-dnsmasq"
 # webproc release settings
 ENV WEBPROC_VERSION=0.4.0
 ENV WEBPROC_URL=https://github.com/jpillora/webproc/releases/download/v${WEBPROC_VERSION}/webproc_${WEBPROC_VERSION}_linux_amd64.gz

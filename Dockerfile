@@ -16,5 +16,14 @@ run mkdir -p /etc/default/
 RUN echo -e "ENABLED=1\nIGNORE_RESOLVCONF=yes" > /etc/default/dnsmasq
 COPY dnsmasq.conf /etc/dnsmasq.conf
 
+# run Aqua micoscanner
+ENV AQUA_TOKEN=$AQUA_TOKEN
+RUN apk add --no-cache ca-certificates && update-ca-certificates && \
+    wget -O /microscanner https://get.aquasec.com/microscanner && \
+    chmod +x /microscanner && \
+    /microscanner ${AQUA_TOKEN} && \
+    rm -rf /microscanner
+RUN echo "No vulnerabilities!"
+
 #run!
 ENTRYPOINT ["webproc","--config","/etc/dnsmasq.conf","--","dnsmasq","--no-daemon"]

@@ -7,8 +7,8 @@ dnsmasq in a docker container, configurable via a [simple web UI](https://github
 
 [![Build Status](https://travis-ci.org/leto1210/docker-dnsmasq.svg?branch=master)](https://travis-ci.org/leto1210/docker-dnsmasq)
 
-[![](https://images.microbadger.com/badges/image/leto1210/docker-dnsmasq.svg)](https://microbadger.com/images/leto1210/docker-dnsmasq "Get your own image badge on microbadger.com")
-[![](https://images.microbadger.com/badges/version/leto1210/docker-dnsmasq.svg)](https://microbadger.com/images/leto1210/docker-dnsmasq "Get your own version badge on microbadger.com")
+[![dockerhub](https://images.microbadger.com/badges/image/leto1210/docker-dnsmasq.svg)](https://microbadger.com/images/leto1210/docker-dnsmasq "Get your own image badge on microbadger.com")
+[![dockerhub](https://images.microbadger.com/badges/version/leto1210/docker-dnsmasq.svg)](https://microbadger.com/images/leto1210/docker-dnsmasq "Get your own version badge on microbadger.com")
 
 ### Usage
 
@@ -86,4 +86,4 @@ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-[dockerhub]: https://hub.docker.com/r/jpillora/dnsmasq/
+[dockerhub]: https://hub.docker.com/r/leto1210/docker-dnsmasq/

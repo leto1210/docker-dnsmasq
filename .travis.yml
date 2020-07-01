@@ -11,7 +11,7 @@ before_script:
 
 
 script:
-  - docker build -t $DOCKER_USERNAME/docker-dnsmasq:$TRAVIS_BUILD_NUMBER .
+  - docker build -t $DOCKER_USERNAME/docker-dnsmasq:$TRAVIS_BUILD_NUMBER -t $DOCKER_USERNAME/docker-dnsmasq:$TRAVIS_COMMIT.
   - docker images
   - echo "$DOCKER_PASS" | docker login -u "$DOCKER_USERNAME" --password-stdin
   - docker push $DOCKER_USERNAME/docker-dnsmasq:$TRAVIS_BUILD_NUMBER

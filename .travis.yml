@@ -7,8 +7,6 @@ branches:
 
 before_script:
   - git clone https://github.com/leto1210/docker-dnsmasq.git
-  - export TARGET_IMAGE_TAG=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then if [ "$TRAVIS_BRANCH" = "master" ]; then echo "armhf"; else echo "$TRAVIS_BRANCH-armhf"; fi; else echo ""; fi)
-
 
 script:
   - docker build -t $DOCKER_USERNAME/docker-dnsmasq:$TRAVIS_BUILD_NUMBER .
@@ -22,7 +20,7 @@ script:
 
 after_success:
   - echo "$DOCKER_PASS" | docker login -u "$DOCKER_USERNAME" --password-stdin
-  - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else (echo $TRAVIS_BRANCH) ; fi`
+  - export TAG="latest"
   - docker build -t $DOCKER_USERNAME/docker-dnsmasq:$TAG .
   - docker push $DOCKER_USERNAME/docker-dnsmasq:$TAG
 

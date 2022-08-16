@@ -1,4 +1,4 @@
-FROM alpine:3.16.0
+FROM alpine:3.16
 LABEL maintainer="leto1210"
 LABEL org.label-schema.vcs-url="e.g. https://github.com/leto1210/docker-dnsmasq"
 

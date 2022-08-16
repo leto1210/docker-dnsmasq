@@ -1,6 +1,6 @@
 language: minimal
 services: docker
-dist: bionic
+dist: focal
 
 arch:
   - amd64

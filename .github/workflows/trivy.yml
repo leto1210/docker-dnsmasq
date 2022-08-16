@@ -33,10 +33,11 @@ jobs:
          time: 4m
       - name: Add SHORT_SHA env property with commit short sha
         run: echo "SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-8`" >> $GITHUB_ENV
+
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
         with:
-          image-ref: 'docker.io/leto1210/docker-dnsmasq:${GITHUB_ENV}'
+          image-ref: 'docker.io/leto1210/docker-dnsmasq:${SHORT_SHA}'
           format: 'template'
           template: '@/contrib/sarif.tpl'
           output: 'trivy-results.sarif'

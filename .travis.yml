@@ -1,35 +1,46 @@
 language: minimal
 services: docker
+dist: bionic
 
-branches:
-  only:
-    - master
+arch:
+  - arm64
+
+env:
+  global:
+    - COMMIT=${TRAVIS_COMMIT::8}
+
+cache:
+  directories:
+    - .trivycache/
+
+before_install:
+  - chmod +x ./.travis/main.sh
+  - './.travis/main.sh'
 
 before_script:
+  - export TRIVY_VERSION=$(wget -qO - "https://api.github.com/repos/aquasecurity/trivy/releases/latest" | grep '"tag_name":' | sed -E 's/.*"v([^"]+)".*/\1/')
+  - echo $TRIVY_VERSION
+  - wget --no-verbose https://github.com/aquasecurity/trivy/releases/download/v${TRIVY_VERSION}/trivy_${TRIVY_VERSION}_Linux-ARM64.tar.gz -O - | tar -zxvf -
+  - export TARGET_IMAGE_TAG=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then if [ "$TRAVIS_BRANCH" = "master" ]; then echo "armhf"; else echo "$TRAVIS_BRANCH-armhf"; fi; else echo ""; fi)
   - git clone https://github.com/leto1210/docker-dnsmasq.git
 
 script:
-  - docker build -t $DOCKER_USERNAME/docker-dnsmasq:$TRAVIS_BUILD_NUMBER .
-  - docker tag $DOCKER_USERNAME/docker-dnsmasq:$TRAVIS_BUILD_NUMBER $DOCKER_USERNAME/docker-dnsmasq:$TRAVIS_COMMIT
+  - docker build -t $DOCKER_USERNAME/docker-dnsmasq:${COMMIT} .
+  - docker tag $DOCKER_USERNAME/docker-dnsmasq:${COMMIT} $DOCKER_USERNAME/docker-dnsmasq:$TRAVIS_COMMIT
   - docker images
   - echo "$DOCKER_PASS" | docker login -u "$DOCKER_USERNAME" --password-stdin
-  #- docker push $DOCKER_USERNAME/docker-dnsmasq:$TRAVIS_BUILD_NUMBER
-  - docker push $DOCKER_USERNAME/docker-dnsmasq:$TRAVIS_COMMIT
-  - git clone https://github.com/lukebond/microscanner-wrapper.git
-  - MICROSCANNER_TOKEN=$AQUA_TOKEN ./microscanner-wrapper/scan.sh $DOCKER_USERNAME/docker-dnsmasq:$TRAVIS_COMMIT
+  - docker push $DOCKER_USERNAME/docker-dnsmasq:${COMMIT}
+  # Build report
+  - echo duplicacy-web-arm:${COMMIT}
+  - ./trivy image --cache-dir .trivycache/ --no-progress --format template --template "@contrib/gitlab.tpl" -o gl-container-scanning-report.json $DOCKER_USERNAME/duplicacy-web-arm:${COMMIT}
+  # Print report
+  - ./trivy image --cache-dir .trivycache/ --no-progress --severity HIGH $DOCKER_USERNAME/duplicacy-web-arm:${COMMIT}
+  # Fail on critical vulnerability
+  - ./trivy image --exit-code 1 --cache-dir .trivycache/ --severity CRITICAL --no-progress $DOCKER_USERNAME/duplicacy-web-arm:${COMMIT}
+
 
 after_success:
   - echo "$DOCKER_PASS" | docker login -u "$DOCKER_USERNAME" --password-stdin
   - export TAG="latest"
   - docker build -t $DOCKER_USERNAME/docker-dnsmasq:$TAG .
   - docker push $DOCKER_USERNAME/docker-dnsmasq:$TAG
-
-notifications:
-  webhooks:
-    urls:
-      - https://hooks.microbadger.com/images/leto1210/docker-dnsmasq/yHnTY1fBVjlf1UKlN6swxAEIrts=
-    on_success: always # default: always
-    #on_failure: always # default: always
-    #on_start:   change # default: never
-    #on_cancel:  always # default: always
-    #on_error:   always # default: always

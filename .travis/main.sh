@@ -32,7 +32,7 @@ setup_dependencies() {
 
 #Upgrade Docker version for avoid Alpine Seccomp bug
   sudo apt update -y
-  #sudo apt install -y docker-ce
+  sudo apt install -y docker-ce
 
   docker info
 }

@@ -11,7 +11,7 @@ env:
 
 cache:
   directories:
-    - .trivycache/
+    - .trivycacheamd64/
 
 before_install:
   - chmod +x ./.travis/main.sh
@@ -21,7 +21,6 @@ before_script:
   - export TRIVY_VERSION=$(wget -qO - "https://api.github.com/repos/aquasecurity/trivy/releases/latest" | grep '"tag_name":' | sed -E 's/.*"v([^"]+)".*/\1/')
   - echo $TRIVY_VERSION
   - wget --no-verbose https://github.com/aquasecurity/trivy/releases/download/v${TRIVY_VERSION}/trivy_${TRIVY_VERSION}_Linux-amd64.tar.gz -O - | tar -zxvf -
-  - export TARGET_IMAGE_TAG=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then if [ "$TRAVIS_BRANCH" = "master" ]; then echo "armhf"; else echo "$TRAVIS_BRANCH-armhf"; fi; else echo ""; fi)
   - git clone https://github.com/leto1210/docker-dnsmasq.git
 
 script:
@@ -32,11 +31,11 @@ script:
   - docker push $DOCKER_USERNAME/docker-dnsmasq:${COMMIT}
   # Build report
   - echo docker-dnsmasq:${COMMIT}
-  - ./trivy image --cache-dir .trivycache/ --no-progress --format template --template "@contrib/gitlab.tpl" -o gl-container-scanning-report.json $DOCKER_USERNAME/docker-dnsmasq:${COMMIT}
+  - ./trivy image --cache-dir .trivycacheamd64/ --no-progress --format template --template "@contrib/gitlab.tpl" -o gl-container-scanning-report.json $DOCKER_USERNAME/docker-dnsmasq:${COMMIT}
   # Print report
-  - ./trivy image --cache-dir .trivycache/ --no-progress --severity HIGH $DOCKER_USERNAME/docker-dnsmasq:${COMMIT}
+  - ./trivy image --cache-dir .trivycacheamd64/ --no-progress --severity HIGH $DOCKER_USERNAME/docker-dnsmasq:${COMMIT}
   # Fail on critical vulnerability
-  - ./trivy image --exit-code 1 --cache-dir .trivycache/ --severity CRITICAL --no-progress $DOCKER_USERNAME/docker-dnsmasq:${COMMIT}
+  - ./trivy image --exit-code 1 --cache-dir .trivycacheamd64/ --severity CRITICAL --no-progress $DOCKER_USERNAME/docker-dnsmasq:${COMMIT}
 
 
 after_success:

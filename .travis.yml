@@ -3,7 +3,7 @@ services: docker
 dist: bionic
 
 arch:
-  - arm64
+  - amd64
 
 env:
   global:

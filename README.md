@@ -5,10 +5,11 @@ Based on fork from jpillora/dnsmasq
 dnsmasq in a docker container, configurable via a [simple web UI](https://github.com/jpillora/webproc)
 
 
-[![Build Status](https://travis-ci.org/leto1210/docker-dnsmasq.svg?branch=master)](https://travis-ci.org/leto1210/docker-dnsmasq)
-
-[![dockerhub](https://images.microbadger.com/badges/image/leto1210/docker-dnsmasq.svg)](https://microbadger.com/images/leto1210/docker-dnsmasq)
-[![dockerhub](https://images.microbadger.com/badges/version/leto1210/docker-dnsmasq.svg)](https://microbadger.com/images/leto1210/docker-dnsmasq)
+[![Travis Build Status](https://travis-ci.com/leto1210/docker-dnsmasq.svg?branch=master)](https://travis-ci.com/github/leto1210/docker-dnsmasq)
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
+![Docker Pulls](https://img.shields.io/docker/pulls/leto1210/docker-dnsmasq)
+[![Trivy security check](https://github.com/leto1210/docker-dnsmasq/actions/workflows/trivy.yml/badge.svg)](https://github.com/leto1210/docker-dnsmasq/actions/workflows/trivy.yml)
+[![Dependency Review](https://github.com/leto1210/docker-dnsmasq/actions/workflows/dependency-review.yml/badge.svg?branch=master)](https://github.com/leto1210/docker-dnsmasq/actions/workflows/dependency-review.yml)
 
 ### Usage
 

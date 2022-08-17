@@ -27,17 +27,24 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+      - uses: benjlevesque/short-sha@v1.2
+        id: short-sha
+        with:
+          length: 6
+      - run: echo $SHA
+        env:
+          SHA: ${{ steps.short-sha.outputs.sha }}
+      - run: echo $SHA
+        env:
+          SHA: ${{ env.SHA }}
       - name: Sleep Action
         uses: jakejarvis/wait-action@v0.1.1
         with:
          time: 4m
-      - name: Add SHORT_SHA env property with commit short sha
-        run: echo "SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-8`" >> $GITHUB_ENV
-
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
         with:
-          image-ref: 'docker.io/leto1210/docker-dnsmasq:`echo${SHORT_SHA`}'
+          image-ref: 'docker.io/leto1210/docker-dnsmasq:$sha}'
           format: 'template'
           template: '@/contrib/sarif.tpl'
           output: 'trivy-results.sarif'

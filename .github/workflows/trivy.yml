@@ -40,7 +40,7 @@ jobs:
       - name: Sleep Action
         uses: jakejarvis/wait-action@v0.1.1
         with:
-         time: 15s
+         time: 3m
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
         with:

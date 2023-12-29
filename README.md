@@ -5,9 +5,10 @@ Based on fork from jpillora/dnsmasq
 dnsmasq in a docker container, configurable via a [simple web UI](https://github.com/jpillora/webproc)
 
 
-[![Travis Build Status](https://travis-ci.com/leto1210/docker-dnsmasq.svg?branch=master)](https://travis-ci.com/github/leto1210/docker-dnsmasq)
+![Build workflow](https://github.com/github/docs/actions/workflows/docker-image.yml/badge.svg)
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
 ![Docker Pulls](https://img.shields.io/docker/pulls/leto1210/docker-dnsmasq)
+![Trivy workflow](https://github.com/github/docs/actions/workflows/trivy.yml/badge.svg)
 [![Trivy security check](https://github.com/leto1210/docker-dnsmasq/actions/workflows/trivy.yml/badge.svg)](https://github.com/leto1210/docker-dnsmasq/actions/workflows/trivy.yml)
 
 ### Usage

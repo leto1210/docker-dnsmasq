@@ -11,9 +11,21 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-
+    env:
+      IMG_NAME: ${{ github.repository }}
     steps:
     - uses: actions/checkout@v3
+    - id: commit
+        uses: prompt/actions-commit-hash@v3
+    - name: Docker metadata
+      id: metadata
+      uses: docker/metadata-action@v3
+      with:
+        images: ${{ env.IMG_NAME }}
+        tags: |
+          type=semver,pattern={{version}}
+          type=semver,pattern={{major}}.{{minor}}
+          type=raw,value={{sha}},enable=${{ github.ref_type != 'tag' }}
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
     - name: Login to Docker Hub
@@ -21,9 +33,13 @@ jobs:
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
-    -
-        name: Build and push
-        uses: docker/build-push-action@v4
+    - name: Build and push Docker image
+        uses: docker/build-push-action@v2
         with:
-          push: true
-          tags: leto1210/docker-dnsmasq:latest
+          context: .
+        push: ${{ 
+          github.event.base_ref =='refs/heads/main' && 
+          github.ref_type == 'tag' && 
+          !startsWith(github.ref, 'refs/tags/v0.') }}
+        tags: ${{ steps.metadata.outputs.tags }}
+        labels: ${{ steps.metadata.outputs.labels }}

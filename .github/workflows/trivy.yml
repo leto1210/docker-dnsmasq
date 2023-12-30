@@ -44,13 +44,13 @@ jobs:
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: 'docker.io/leto1210/duplicacy-web-arm:${{ env.sha }}'
+          image-ref: 'docker.io/leto1210/docker-dnsmasq:${{ env.sha }}'
           format: 'sarif'
-          output: 'trivy-results.sarif'
+          output: 'docker-dnsmasq_trivy-results.sarif'
           severity: 'CRITICAL,HIGH'
       - name: Upload Trivy scan results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v2
         if: always()
         with:
-          sarif_file: 'trivy-results.sarif'
+          sarif_file: 'docker-dnsmasq_trivy-results.sarif'
           severity: 'CRITICAL,HIGH'

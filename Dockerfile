@@ -8,7 +8,7 @@ ENV WEBPROC_URL=https://github.com/jpillora/webproc/releases/download/v${WEBPROC
 
 # fetch dnsmasq and webproc binary
 RUN apk update \
-	&& apk --no-cache add dnsmasq \
+	&& apk --no-cache add dnsmasq-dnssec \
 	&& apk add --no-cache --virtual .build-deps curl
 RUN curl -sL $WEBPROC_URL | gzip -d - > /usr/local/bin/webproc \
 	&& chmod +x /usr/local/bin/webproc \

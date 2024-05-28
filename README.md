@@ -28,6 +28,9 @@ dnsmasq in a docker container, configurable via a [simple web UI](https://github
 	server=/company/10.0.0.1
 	#explicitly define host-ip mappings
 	address=/myhost.company/10.0.0.2
+ 	#uncomment to activate dnssec
+   	#conf-file=/usr/share/dnsmasq/trust-anchors.conf
+   	#dnssec
 	```
 
 1. Run the container

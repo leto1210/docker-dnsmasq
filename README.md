@@ -61,6 +61,13 @@ dnsmasq in a docker container, configurable via a [simple web UI](https://github
 
 	myhost.company has address 10.0.0.2
 	```
+ 
+ 1. Restart process without restarting container
+
+   You can reload the dnsmasq service without restarting the container with the following command:
+   	
+   	docker exec dnsmasq pkill -HUP dnsmasq   	
+
 
 #### MIT License
 

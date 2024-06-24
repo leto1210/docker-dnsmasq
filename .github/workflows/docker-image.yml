@@ -33,12 +33,12 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Build and push with commit number
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
             push: true
             tags: leto1210/docker-dnsmasq:${{ steps.short-sha.outputs.sha }}
       - name: Build and push with latest tag
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
             push: true
             tags: leto1210/docker-dnsmasq:latest

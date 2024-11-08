@@ -45,14 +45,14 @@ jobs:
         id: pull
         shell: bash
         run: |
-          oras pull ghcr.io/leto1210/docker-dnsmasq/.github/trivy-db:2
-          oras pull ghcr.io/leto1210/docker-dnsmasq/.github/trivy-java-db:1
+          oras pull ghcr.io/leto1210/docker-dnsmasq/trivy-db:2
+          oras pull ghcr.io/leto1210/docker-dnsmasq/trivy-java-db:1
       - name: Scan Container Image
         id: scan
         uses: aquasecurity/trivy-action@0.28.0
         env:
-          TRIVY_DB_REPOSITORY: ghcr.io/leto1210/docker-dnsmasq/.github/trivy-db,public.ecr.aws/aquasecurity/trivy-db,ghcr.io/aquasecurity/trivy-db
-          TRIVY_JAVA_DB_REPOSITORY: ghcr.io/leto1210/docker-dnsmasq/.github/trivy-java-db,public.ecr.aws/aquasecurity/trivy-java-db,ghcr.io/aquasecurity/trivy-java-db
+          TRIVY_DB_REPOSITORY: ghcr.io/leto1210/docker-dnsmasq/trivy-db,public.ecr.aws/aquasecurity/trivy-db,ghcr.io/aquasecurity/trivy-db
+          TRIVY_JAVA_DB_REPOSITORY: ghcr.io/leto1210/docker-dnsmasq/trivy-java-db,public.ecr.aws/aquasecurity/trivy-java-db,ghcr.io/aquasecurity/trivy-java-db
           TRIVY_USERNAME: ${{ github.actor }}
           TRIVY_PASSWORD: ${{ github.token }}
         with:

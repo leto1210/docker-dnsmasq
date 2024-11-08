@@ -70,4 +70,3 @@ jobs:
         if: always()
         with:
           sarif_file: 'docker-dnsmasq_trivy-results.sarif'
-          severity: 'CRITICAL,HIGH'

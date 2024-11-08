@@ -70,7 +70,7 @@ jobs:
           cache: true
           exit-code: 0
           image-ref: docker.io/leto1210/docker-dnsmasq:${{ env.sha }}
-          format: sarif_file
+          format: sarif
           output: docker-dnsmasq_trivy-results.sarif
           severity: CRITICAL,HIGH
       - name: Upload Trivy scan results to GitHub Security tab

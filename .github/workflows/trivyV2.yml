@@ -43,24 +43,17 @@ jobs:
           oras login ghcr.io \
             -u ${{ github.actor }} \
             -p ${{ github.token }}
-      - name: Pull Trivy Images
-        id: pullv0
-        run: |
-          oras pull ghcr.io/aquasecurity/trivy-db:2
-          oras pull ghcr.io/aquasecurity/trivy-java-db:1
-
       - name: Push Trivy Images
         id: push
         run: |
           oras push ghcr.io/leto1210/docker-dnsmasq/trivy-db:2 \
             db.tar.gz:application/vnd.aquasec.trivy.db.layer.v1.tar+gzip \
             --artifact-type application/vnd.aquasec.trivy.config.v1+json
-
           oras push ghcr.io/leto1210/docker-dnsmasq/trivy-java-db:1 \
             javadb.tar.gz:application/vnd.aquasec.trivy.javadb.layer.v1.tar+gzip \
             --artifact-type application/vnd.aquasec.trivy.config.v1+json
       - name: Pull Trivy DBs from GHCR
-        id: pullv1
+        id: pull
         shell: bash
         run: |
           oras pull ghcr.io/leto1210/docker-dnsmasq/trivy-db:2

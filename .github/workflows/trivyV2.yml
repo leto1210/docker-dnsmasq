@@ -42,7 +42,7 @@ jobs:
             -u ${{ github.actor }} \
             -p ${{ github.token }}
       - name: Pull Trivy Images
-        id: pull
+        id: pullv0
         run: |
           oras pull ghcr.io/aquasecurity/trivy-db:2
           oras pull ghcr.io/aquasecurity/trivy-java-db:1
@@ -58,11 +58,11 @@ jobs:
             javadb.tar.gz:application/vnd.aquasec.trivy.javadb.layer.v1.tar+gzip \
             --artifact-type application/vnd.aquasec.trivy.config.v1+json
       - name: Pull Trivy DBs from GHCR
-        id: pull
+        id: pullv1
         shell: bash
         run: |
-          oras pull ghcr.io/leto1210/docker-dnsmasq/trivy-db:2
-          oras pull ghcr.io/leto1210/docker-dnsmasq/trivy-java-db:1
+          oras pull ghcr.io/leto1210/docker-dnsmasq/.github/trivy-db:2
+          oras pull ghcr.io/leto1210/docker-dnsmasq/.github/trivy-java-db:1
       - name: Scan Container Image
         id: scan
         uses: aquasecurity/trivy-action@0.28.0

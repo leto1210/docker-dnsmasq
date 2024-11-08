@@ -11,11 +11,13 @@ on:
     - cron: 16 3 * * 4
 permissions:
   contents: read
+  packages: write
 jobs:
   build:
     permissions:
       contents: read
       security-events: write
+      packages: write
     name: Build
     runs-on: ubuntu-20.04
     steps:

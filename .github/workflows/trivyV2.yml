@@ -49,6 +49,10 @@ jobs:
         run: |
           oras pull ghcr.io/leto1210/docker-dnsmasq/trivy-db:2
           oras pull ghcr.io/leto1210/docker-dnsmasq/trivy-java-db:1
+      - name: Sleep Action
+        uses: jakejarvis/wait-action@v0.1.1
+        with:
+         time: 1m
       - name: Scan Container Image
         id: scan
         uses: aquasecurity/trivy-action@0.28.0

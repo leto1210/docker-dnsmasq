@@ -1,24 +1,23 @@
+---
 name: Trivy scan V2
-
 on:
   push:
-    branches: [ "master" ]
+    branches:
+      - master
   pull_request:
-    # The branches below must be a subset of the branches above
-    branches: [ "master" ]
+    branches:
+      - master
   schedule:
-    - cron: '16 3 * * 4'
-
+    - cron: 16 3 * * 4
 permissions:
   contents: read
-
 jobs:
   build:
     permissions:
-      contents: read # for actions/checkout to fetch code
-      security-events: write # for github/codeql-action/upload-sarif to upload SARIF results
+      contents: read
+      security-events: write
     name: Build
-    runs-on: "ubuntu-20.04"
+    runs-on: ubuntu-20.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -32,44 +31,40 @@ jobs:
       - run: echo $SHA
         env:
           SHA: ${{ env.SHA }}
-    - name: Install ORAS
-      id: oras
-      uses: oras-project/setup-oras@v1
-
-    - name: Authenticate to GHCR
-      id: ghcr
-      shell: bash
-      run: |
-        oras login ghcr.io \
-          -u ${{ github.actor }} \
-          -p ${{ github.token }}
-
-    - name: Pull Trivy DBs from GHCR
-      id: pull
-      shell: bash
-      run: |
-        oras pull ghcr.io/leto1210/docker-dnsmasq/.github/trivy-db:2
-        oras pull ghcr.io/leto1210/docker-dnsmasq/.github/trivy-java-db:1
-
-    - name: Scan Container Image
-      id: scan
-      uses: aquasecurity/trivy-action@0.28.0
-      env:
-        TRIVY_DB_REPOSITORY: ghcr.io/leto1210/docker-dnsmasq/.github/trivy-db,public.ecr.aws/aquasecurity/trivy-db,ghcr.io/aquasecurity/trivy-db
-        TRIVY_JAVA_DB_REPOSITORY: ghcr.io/leto1210/docker-dnsmasq/.github/trivy-java-db,public.ecr.aws/aquasecurity/trivy-java-db,ghcr.io/aquasecurity/trivy-java-db
-        # Not 100% sure if these are required, but so far no issues.
-        TRIVY_USERNAME: ${{ github.actor }}
-        TRIVY_PASSWORD: ${{ github.token }}
-      with:
-        cache: true
-        exit-code: 0
-        image-ref: 'docker.io/leto1210/docker-dnsmasq:${{ env.sha }}'
-        format: 'sarif'
-        output: 'docker-dnsmasq_trivy-results.sarif'
-        severity: 'CRITICAL'
-    - name: Upload Trivy scan results to GitHub Security tab
-      uses: github/codeql-action/upload-sarif@v3
-      if: always()
-      with:
-        sarif_file: 'docker-dnsmasq_trivy-results.sarif'
-        severity: 'CRITICAL,HIGH'
+      - name: Install ORAS
+        id: oras
+        uses: oras-project/setup-oras@v1
+      - name: Authenticate to GHCR
+        id: ghcr
+        shell: bash
+        run: |
+          oras login ghcr.io \
+            -u ${{ github.actor }} \
+            -p ${{ github.token }}
+      - name: Pull Trivy DBs from GHCR
+        id: pull
+        shell: bash
+        run: |
+          oras pull ghcr.io/leto1210/docker-dnsmasq/.github/trivy-db:2
+          oras pull ghcr.io/leto1210/docker-dnsmasq/.github/trivy-java-db:1
+      - name: Scan Container Image
+        id: scan
+        uses: aquasecurity/trivy-action@0.28.0
+        env:
+          TRIVY_DB_REPOSITORY: ghcr.io/leto1210/docker-dnsmasq/.github/trivy-db,public.ecr.aws/aquasecurity/trivy-db,ghcr.io/aquasecurity/trivy-db
+          TRIVY_JAVA_DB_REPOSITORY: ghcr.io/leto1210/docker-dnsmasq/.github/trivy-java-db,public.ecr.aws/aquasecurity/trivy-java-db,ghcr.io/aquasecurity/trivy-java-db
+          TRIVY_USERNAME: ${{ github.actor }}
+          TRIVY_PASSWORD: ${{ github.token }}
+        with:
+          cache: true
+          exit-code: 0
+          image-ref: docker.io/leto1210/docker-dnsmasq:${{ env.sha }}
+          format: sarif
+          output: docker-dnsmasq_trivy-results.sarif
+          severity: CRITICAL
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: docker-dnsmasq_trivy-results.sarif
+          severity: CRITICAL,HIGH

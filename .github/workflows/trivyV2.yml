@@ -50,19 +50,19 @@ jobs:
       - name: Push Trivy Images
         id: push
         run: |
-          oras push ghcr.io/leto1210/docker-dnsmasq/.github/trivy-db:2 \
+          oras push ghcr.io/leto1210/docker-dnsmasq/trivy-db:2 \
             db.tar.gz:application/vnd.aquasec.trivy.db.layer.v1.tar+gzip \
             --artifact-type application/vnd.aquasec.trivy.config.v1+json
 
-          oras push ghcr.io/leto1210/docker-dnsmasq/.github/trivy-java-db:1 \
+          oras push ghcr.io/leto1210/docker-dnsmasq/trivy-java-db:1 \
             javadb.tar.gz:application/vnd.aquasec.trivy.javadb.layer.v1.tar+gzip \
             --artifact-type application/vnd.aquasec.trivy.config.v1+json
       - name: Pull Trivy DBs from GHCR
         id: pullv1
         shell: bash
         run: |
-          oras pull ghcr.io/leto1210/docker-dnsmasq/.github/trivy-db:2
-          oras pull ghcr.io/leto1210/docker-dnsmasq/.github/trivy-java-db:1
+          oras pull ghcr.io/leto1210/docker-dnsmasq/trivy-db:2
+          oras pull ghcr.io/leto1210/docker-dnsmasq/trivy-java-db:1
       - name: Scan Container Image
         id: scan
         uses: aquasecurity/trivy-action@0.28.0

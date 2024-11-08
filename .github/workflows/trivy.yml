@@ -42,7 +42,7 @@ jobs:
         with:
          time: 2m
       - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@0.24.0
         with:
           image-ref: 'docker.io/leto1210/docker-dnsmasq:${{ env.sha }}'
           format: 'sarif'

@@ -3,6 +3,8 @@ name: Docker Image CI
 on:
   push:
     branches: [ "master" ]
+    paths-ignore:
+      - ".github/**" # Ignore les changements dans le répertoire .github
   pull_request:
     branches: [ "master" ]
 

@@ -2,42 +2,42 @@ name: Cache Trivy DBs
 
 on:
   schedule:
-    - cron: "0 5 * * *" # Exécution quotidienne à 5h00 UTC
+    - cron: "0 5 * * *" # Daily execution at 5:00 UTC
 
 permissions:
   packages: write
   id-token: write
 
 jobs:
-  lint:
-    name: Cache Trivy DBs
+  cache-trivy-dbs:
+    name: Cache Trivy Databases
     runs-on: ubuntu-latest
+    timeout-minutes: 30
 
     steps:
       - name: Install ORAS
-        id: oras
         uses: oras-project/setup-oras@v1
 
       - name: Authenticate to GHCR
-        id: ghcr
         run: |
-          oras login ghcr.io \
+          echo "${{ github.token }}" | oras login ghcr.io \
             -u ${{ github.actor }} \
-            -p ${{ github.token }}
+            --password-stdin
 
-      - name: Pull Trivy Images
-        id: pull
-        run: |
-          oras pull ghcr.io/aquasecurity/trivy-db:2
-          oras pull ghcr.io/aquasecurity/trivy-java-db:1
+      - name: Pull Trivy DB
+        run: oras pull ghcr.io/aquasecurity/trivy-db:2
 
-      - name: Push Trivy Images
-        id: push
+      - name: Pull Trivy Java DB
+        run: oras pull ghcr.io/aquasecurity/trivy-java-db:1
+
+      - name: Push Trivy DB
         run: |
           oras push ghcr.io/leto1210/docker-dnsmasq/trivy-db:2 \
             db.tar.gz:application/vnd.aquasec.trivy.db.layer.v1.tar+gzip \
             --artifact-type application/vnd.aquasec.trivy.config.v1+json
 
+      - name: Push Trivy Java DB
+        run: |
           oras push ghcr.io/leto1210/docker-dnsmasq/trivy-java-db:1 \
             javadb.tar.gz:application/vnd.aquasec.trivy.javadb.layer.v1.tar+gzip \
             --artifact-type application/vnd.aquasec.trivy.config.v1+json

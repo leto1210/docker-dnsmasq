@@ -9,10 +9,11 @@ ENV WEBPROC_URL=https://github.com/jpillora/webproc/releases/download/v${WEBPROC
 
 # Fetch dnsmasq and webproc binary, configure, and cleanup
 RUN apk add --no-cache dnsmasq curl \
-    && curl -sL $WEBPROC_URL | gzip -d - > /usr/local/bin/webproc \
+    && curl -sL --fail $WEBPROC_URL | gzip -d - > /usr/local/bin/webproc \
     && chmod +x /usr/local/bin/webproc \
     && mkdir -p /etc/default/ \
-    && echo -e "ENABLED=1\nIGNORE_RESOLVCONF=yes" > /etc/default/dnsmasq \
+    && echo "ENABLED=1" > /etc/default/dnsmasq \
+    && echo "IGNORE_RESOLVCONF=yes" >> /etc/default/dnsmasq \
     && rm -rf /var/lib/apk/* /tmp/* /var/cache/apk/*
 
 COPY dnsmasq.conf /etc/dnsmasq.conf

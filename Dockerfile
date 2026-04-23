@@ -1,4 +1,4 @@
-FROM alpine:3.23.2
+FROM alpine:3.23.4
 
 # Image metadata
 LABEL maintainer="leto1210"

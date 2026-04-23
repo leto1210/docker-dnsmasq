@@ -1,0 +1,9 @@
+.git
+.github
+.devcontainer
+.DS_Store
+AGENTS.md
+
+# Local/editor noise
+*.log
+*.tmp

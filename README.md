@@ -1,99 +1,94 @@
-Based on fork from jpillora/dnsmasq
-
 # docker-dnsmasq
 
-dnsmasq in a docker container, configurable via a [simple web UI](https://github.com/jpillora/webproc)
+Lightweight `dnsmasq` container with a [simple web UI](https://github.com/jpillora/webproc) for editing and reloading configuration.
 
+Originally based on a fork of `jpillora/dnsmasq`.
 
 ![Build workflow](https://github.com/leto1210/docker-dnsmasq/actions/workflows/docker-image.yml/badge.svg)
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
 ![Docker Pulls](https://img.shields.io/docker/pulls/leto1210/docker-dnsmasq)
-[![Trivy security check](https://github.com/leto1210/docker-dnsmasq/actions/workflows/trivy.yml/badge.svg)](https://github.com/leto1210/docker-dnsmasq/actions/workflows/trivy.yml)
+[![Trivy security check](https://github.com/leto1210/docker-dnsmasq/actions/workflows/trivyV2.yml/badge.svg)](https://github.com/leto1210/docker-dnsmasq/actions/workflows/trivyV2.yml)
 
-### Usage
+## Usage
 
-1. Create a [`/opt/dnsmasq.conf`](http://oss.segetech.com/intra/srv/dnsmasq.conf) file on the Docker host
+### 1) Create your dnsmasq config
 
-	``` ini
-	#dnsmasq config, for a complete example, see:
-	#  http://oss.segetech.com/intra/srv/dnsmasq.conf
-	#log all dns queries
-	log-queries
-	#dont use hosts nameservers
-	no-resolv
-	#use google as default nameservers
-	server=8.8.4.4
-	server=8.8.8.8
-	#serve all .company queries using a specific nameserver
-	server=/company/10.0.0.1
-	#explicitly define host-ip mappings
-	address=/myhost.company/10.0.0.2
- 	#uncomment to activate dnssec
-   	#conf-file=/usr/share/dnsmasq/trust-anchors.conf
-   	#dnssec
-	```
+Create `/opt/dnsmasq.conf` on the Docker host:
 
-1. Run the container
+```ini
+# dnsmasq config
 
-	```
-	$ docker run \
-		--name dnsmasq \
-		-d \
-		-p 53:53/udp \
-		-p 5380:8080 \
-		-v /opt/dnsmasq.conf:/etc/dnsmasq.conf \
-		--log-opt "max-size=100m" \
-		-e "HTTP_USER=foo" \
-		-e "HTTP_PASS=bar" \
-		--restart always \
-		leto1210/docker-dnsmasq
-	```
+# Log DNS queries
+log-queries
 
-1. Visit `http://<docker-host>:5380`, authenticate with `foo/bar` and you should see
+# Do not use host resolvers
+no-resolv
 
-	<img width="833" alt="screen shot 2017-10-15 at 1 41 21 am" src="https://user-images.githubusercontent.com/633843/31580966-baacba62-b1a9-11e7-8439-ca1ddfe828dd.png">
+# Upstream resolvers
+server=8.8.4.4
+server=8.8.8.8
 
-1. Test it out with
+# Route all .company requests to a specific resolver
+server=/company/10.0.0.1
 
-	```
-	$ host myhost.company <docker-host>
-	Using domain server:
-	Name: <docker-host>
-	Address: <docker-host>#53
-	Aliases:
+# Static mapping
+address=/myhost.company/10.0.0.2
 
-	myhost.company has address 10.0.0.2
-	```
- 
- 1. Restart process without restarting container
+# Uncomment to enable DNSSEC
+# conf-file=/usr/share/dnsmasq/trust-anchors.conf
+# dnssec
+```
 
-   You can reload the dnsmasq service without restarting the container with the following command:
-   	
-   	docker exec dnsmasq pkill -HUP dnsmasq   	
+### 2) Run the container
 
+```bash
+docker run \
+  --name dnsmasq \
+  -d \
+  -p 53:53/udp \
+  -p 5380:8080 \
+  -v /opt/dnsmasq.conf:/etc/dnsmasq.conf \
+  --log-opt "max-size=100m" \
+  -e HTTP_USER=foo \
+  -e HTTP_PASS=bar \
+  --restart always \
+  leto1210/docker-dnsmasq
+```
 
-#### MIT License
+### 3) Open the web UI
 
-Copyright &copy; 2020 Jaime Pillora &lt;dev@jpillora.com&gt; & &lt;leto1210&gt;
+Go to `http://<docker-host>:5380` and authenticate with `foo/bar`.
 
-Permission is hereby granted, free of charge, to any person obtaining
-a copy of this software and associated documentation files (the
-'Software'), to deal in the Software without restriction, including
-without limitation the rights to use, copy, modify, merge, publish,
-distribute, sublicense, and/or sell copies of the Software, and to
-permit persons to whom the Software is furnished to do so, subject to
-the following conditions:
+<img width="833" alt="webproc UI" src="https://user-images.githubusercontent.com/633843/31580966-baacba62-b1a9-11e7-8439-ca1ddfe828dd.png">
 
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
+### 4) Test DNS resolution
 
-THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
-CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
-TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+```bash
+host myhost.company <docker-host>
+```
 
+Expected output includes:
 
-[dockerhub]: https://hub.docker.com/r/leto1210/docker-dnsmasq/
+```text
+myhost.company has address 10.0.0.2
+```
+
+### 5) Reload `dnsmasq` without restarting the container
+
+```bash
+docker exec dnsmasq pkill -HUP dnsmasq
+```
+
+## Environment variables
+
+- `HTTP_USER`: Web UI username
+- `HTTP_PASS`: Web UI password
+
+## Exposed ports
+
+- `53/udp`: DNS service
+- `8080/tcp`: web UI inside the container (often mapped to `5380` on host)
+
+## License
+
+MIT — see [LICENSE](LICENSE).

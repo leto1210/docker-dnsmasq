@@ -1,0 +1,64 @@
+name: Update WEBPROC version
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 7 * * 1"
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update-webproc:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check latest WEBPROC release
+        id: check
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          CURRENT_VERSION="$(grep '^ENV WEBPROC_VERSION=' Dockerfile | cut -d'=' -f2)"
+
+          LATEST_VERSION="$(curl -fsSL https://api.github.com/repos/jpillora/webproc/releases/latest \
+            | sed -n 's/.*"tag_name": *"v\([^"]*\)".*/\1/p' \
+            | head -n1)"
+
+          if [[ -z "$LATEST_VERSION" ]]; then
+            echo "Unable to determine latest WEBPROC version"
+            exit 1
+          fi
+
+          echo "Current: $CURRENT_VERSION"
+          echo "Latest:  $LATEST_VERSION"
+
+          if [[ "$CURRENT_VERSION" != "$LATEST_VERSION" ]]; then
+            sed -i "s/^ENV WEBPROC_VERSION=.*/ENV WEBPROC_VERSION=$LATEST_VERSION/" Dockerfile
+            echo "update_available=true" >> "$GITHUB_OUTPUT"
+            echo "latest_version=$LATEST_VERSION" >> "$GITHUB_OUTPUT"
+          else
+            echo "update_available=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create pull request
+        if: steps.check.outputs.update_available == 'true'
+        uses: peter-evans/create-pull-request@v7
+        with:
+          commit-message: "chore: bump WEBPROC to ${{ steps.check.outputs.latest_version }}"
+          title: "chore: bump WEBPROC to ${{ steps.check.outputs.latest_version }}"
+          body: |
+            Automated update of WEBPROC based on the latest upstream release.
+
+            - Source: https://github.com/jpillora/webproc/releases/latest
+            - New version: `${{ steps.check.outputs.latest_version }}`
+
+            This PR updates:
+            - `Dockerfile` (`WEBPROC_VERSION`)
+          branch: "chore/update-webproc-${{ steps.check.outputs.latest_version }}"
+          delete-branch: true
+          add-paths: |
+            Dockerfile

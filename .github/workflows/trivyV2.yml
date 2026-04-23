@@ -49,7 +49,7 @@ jobs:
           oras pull ghcr.io/leto1210/docker-dnsmasq/trivy-java-db:1
       - name: Scan Container Image
         id: scan
-        uses: aquasecurity/trivy-action@0.28.0
+        uses: aquasecurity/trivy-action@v0.28.0
         env:
           TRIVY_DB_REPOSITORY: ghcr.io/leto1210/docker-dnsmasq/trivy-db,public.ecr.aws/aquasecurity/trivy-db,ghcr.io/aquasecurity/trivy-db
           TRIVY_JAVA_DB_REPOSITORY: ghcr.io/leto1210/docker-dnsmasq/trivy-java-db,public.ecr.aws/aquasecurity/trivy-java-db,ghcr.io/aquasecurity/trivy-java-db
@@ -59,7 +59,7 @@ jobs:
           cache: true
           exit-code: 0
           ignore-unfixed: true
-          image-ref: docker.io/leto1210/docker-dnsmasq:${{ env.sha }}
+          image-ref: docker.io/leto1210/docker-dnsmasq:${{ steps.short-sha.outputs.sha }}
           format: 'sarif'
           output: 'docker-dnsmasq_trivy-results.sarif'
           severity: 'CRITICAL,HIGH'

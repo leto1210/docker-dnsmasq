@@ -89,6 +89,13 @@ docker exec dnsmasq pkill -HUP dnsmasq
 - `53/udp`: DNS service
 - `8080/tcp`: web UI inside the container (often mapped to `5380` on host)
 
+## Maintenance automation
+
+- Weekly WEBPROC update PR automation: [update-webproc.yml](.github/workflows/update-webproc.yml)
+- Container build and publish: [docker-image.yml](.github/workflows/docker-image.yml)
+- Trivy image scan: [trivyV2.yml](.github/workflows/trivyV2.yml)
+- Trivy DB cache refresh: [CacheTrivyDB.yml](.github/workflows/CacheTrivyDB.yml)
+
 ## License
 
 MIT — see [LICENSE](LICENSE).

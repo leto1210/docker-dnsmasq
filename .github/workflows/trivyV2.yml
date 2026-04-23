@@ -12,6 +12,7 @@ permissions:
   packages: write
 jobs:
   build:
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
     permissions:
       contents: read
       security-events: write
@@ -25,15 +26,16 @@ jobs:
         id: short-sha
         with:
           length: 6
-      - run: echo $SHA
-        env:
-          SHA: ${{ steps.short-sha.outputs.sha }}
-      - run: echo $SHA
-        env:
-          SHA: ${{ env.SHA }}
       - name: Install ORAS
-        id: oras
-        uses: oras-project/setup-oras@v1.1.0
+        shell: bash
+        run: |
+          set -euo pipefail
+          ORAS_VERSION="1.2.3"
+          curl -fsSL "https://github.com/oras-project/oras/releases/download/v${ORAS_VERSION}/oras_${ORAS_VERSION}_linux_amd64.tar.gz" -o oras.tar.gz
+          tar -xzf oras.tar.gz oras
+          sudo mv oras /usr/local/bin/oras
+          rm -f oras.tar.gz
+          oras version
       - name: Authenticate to GHCR
         id: ghcr
         shell: bash

@@ -14,8 +14,11 @@ ENV WEBPROC_URL=https://github.com/jpillora/webproc/releases/download/v${WEBPROC
 # - dnsmasq: DNS forwarder / resolver
 # - curl + gzip: fetch and extract webproc release artifact
 RUN apk add --no-cache dnsmasq curl \
-    && curl -sL --fail "$WEBPROC_URL" | gzip -d - > /usr/local/bin/webproc \
+    && curl -fsSL "$WEBPROC_URL" -o /tmp/webproc.gz \
+    && gzip -t /tmp/webproc.gz \
+    && gzip -dc /tmp/webproc.gz > /usr/local/bin/webproc \
     && chmod +x /usr/local/bin/webproc \
+    && rm -f /tmp/webproc.gz \
     # Keep a minimal /etc/default/dnsmasq file for expected defaults
     && mkdir -p /etc/default/ \
     && echo "ENABLED=1" > /etc/default/dnsmasq \
